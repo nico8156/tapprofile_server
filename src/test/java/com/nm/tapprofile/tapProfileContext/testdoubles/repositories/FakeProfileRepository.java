@@ -1,0 +1,29 @@
+package com.nm.tapprofile.tapProfileContext.testdoubles.repositories;
+
+import com.nm.tapprofile.tapProfileContext.application.ports.ProfileRepository;
+import com.nm.tapprofile.tapProfileContext.domain.model.Profile;
+import com.nm.tapprofile.tapProfileContext.domain.model.Slug;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+public final class FakeProfileRepository implements ProfileRepository {
+
+	private final Map<String, Profile> profilesBySlug = new HashMap<>();
+
+	@Override
+	public boolean existsBySlug(Slug slug) {
+		return profilesBySlug.containsKey(slug.value());
+	}
+
+	@Override
+	public void save(Profile profile) {
+		profilesBySlug.put(profile.slug().value(), profile);
+	}
+
+	@Override
+	public Optional<Profile> findBySlug(Slug slug) {
+		return Optional.ofNullable(profilesBySlug.get(slug.value()));
+	}
+}
