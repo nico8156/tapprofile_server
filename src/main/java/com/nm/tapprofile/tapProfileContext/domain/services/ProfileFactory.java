@@ -30,6 +30,7 @@ public final class ProfileFactory {
 						validHeadline,
 						validBio,
 						ProfileStatus.DRAFT,
-						dateTimeProvider.now()));
+						dateTimeProvider.now(),
+						null));
 	}
 }

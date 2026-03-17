@@ -1,6 +1,7 @@
 package com.nm.tapprofile.tapProfileContext.application.ports;
 
 import com.nm.tapprofile.tapProfileContext.domain.model.Profile;
+import com.nm.tapprofile.tapProfileContext.domain.model.ProfileId;
 import com.nm.tapprofile.tapProfileContext.domain.model.Slug;
 
 import java.util.Optional;
@@ -11,4 +12,6 @@ public interface ProfileRepository {
 	void save(Profile profile);
 
 	Optional<Profile> findBySlug(Slug slug);
+
+	Optional<Profile> findById(ProfileId profileId);
 }
