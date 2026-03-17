@@ -1,8 +1,6 @@
 package com.nm.tapprofile.tapProfileContext.domain.errors;
 
-import java.util.UUID;
-
-public record ProfileNotFoundError(UUID profileId) implements DomainError {
+public record ProfileNotFoundError(String identifier) implements DomainError {
 	@Override
 	public String code() {
 		return "profile.not_found";
@@ -10,6 +8,6 @@ public record ProfileNotFoundError(UUID profileId) implements DomainError {
 
 	@Override
 	public String message() {
-		return "Profile '%s' was not found".formatted(profileId);
+		return "Profile '%s' was not found".formatted(identifier);
 	}
 }

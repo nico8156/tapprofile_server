@@ -27,7 +27,7 @@ public final class PublishProfileCommandHandler {
 		var maybeProfile = profileRepository.findById(profileId);
 
 		if (maybeProfile.isEmpty()) {
-			return Result.failure(new ProfileNotFoundError(profileId.value()));
+			return Result.failure(new ProfileNotFoundError(profileId.value().toString()));
 		}
 
 		var publicationResult = maybeProfile.get().publish(dateTimeProvider.now());
