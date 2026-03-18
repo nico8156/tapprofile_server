@@ -1,4 +1,3 @@
-# TapProfile — API HTTP (Phase 7)
 
 API REST pour le MVP "TapProfile" :
 création de profils publics, capture de leads en meetup, et dashboard simple.
@@ -33,22 +32,23 @@ création de profils publics, capture de leads en meetup, et dashboard simple.
 Créer un profil (draft).
 
 ### Request
-
+```json
 {
   "slug": "alex-martin",
   "displayName": "Alex Martin",
   "headline": "Backend developer",
   "bio": "I build useful products."
 }
-
+```
 ### Response (201)
-
+```json
 {
   "profileId": "uuid"
 }
+```
 
 ### Errors (400 / 409)
-
+```json
 {
   "errors": [
     {
@@ -58,6 +58,8 @@ Créer un profil (draft).
     }
   ]
 }
+
+```
 
 ---
 
@@ -81,7 +83,7 @@ Créer un profil (draft).
 ### GET `/api/public/profiles/{slug}`
 
 ### Response (200)
-
+```json
 {
   "profileId": "uuid",
   "slug": "alex-martin",
@@ -90,6 +92,8 @@ Créer un profil (draft).
   "bio": "I build useful products.",
   "publishedAt": "2026-03-17T11:00:00Z"
 }
+
+```
 
 ### Errors
 
