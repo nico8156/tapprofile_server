@@ -1,5 +1,13 @@
 package com.nm.tapprofile.tapProfileContext.application.queryhandlers;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.time.Instant;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
+
 import com.nm.tapprofile.tapProfileContext.application.commandhandlers.CaptureLeadCommandHandler;
 import com.nm.tapprofile.tapProfileContext.application.commandhandlers.CreateProfileCommandHandler;
 import com.nm.tapprofile.tapProfileContext.application.commandhandlers.PublishProfileCommandHandler;
@@ -12,13 +20,8 @@ import com.nm.tapprofile.tapProfileContext.domain.services.LeadFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeLeadRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileRepository;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileViewRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.time.FixedDateTimeProvider;
-import org.junit.jupiter.api.Test;
-
-import java.time.Instant;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class GetDashboardQueryHandlerTest {
 
@@ -26,7 +29,7 @@ class GetDashboardQueryHandlerTest {
 	void should_return_dashboard_with_profile_and_recent_leads() {
 		var profileRepository = new FakeProfileRepository();
 		var leadRepository = new FakeLeadRepository();
-
+		var profileViewRepository = new FakeProfileViewRepository();
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
 				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
@@ -64,7 +67,7 @@ class GetDashboardQueryHandlerTest {
 				"marc@example.com",
 				"Let's talk soon"));
 
-		var handler = new GetDashboardQueryHandler(profileRepository, leadRepository);
+		var handler = new GetDashboardQueryHandler(profileRepository, leadRepository, profileViewRepository);
 
 		var result = handler.handle(new GetDashboardQuery(profileId.value()));
 
@@ -90,7 +93,7 @@ class GetDashboardQueryHandlerTest {
 	void should_return_empty_leads_when_profile_has_no_leads() {
 		var profileRepository = new FakeProfileRepository();
 		var leadRepository = new FakeLeadRepository();
-
+		var profileViewRepository = new FakeProfileViewRepository();
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
 				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
@@ -101,7 +104,7 @@ class GetDashboardQueryHandlerTest {
 				"Backend developer",
 				"I build useful products."));
 
-		var handler = new GetDashboardQueryHandler(profileRepository, leadRepository);
+		var handler = new GetDashboardQueryHandler(profileRepository, leadRepository, profileViewRepository);
 
 		var result = handler.handle(new GetDashboardQuery(createResult.getSuccess().value()));
 
@@ -117,7 +120,8 @@ class GetDashboardQueryHandlerTest {
 	void should_fail_when_profile_does_not_exist() {
 		var handler = new GetDashboardQueryHandler(
 				new FakeProfileRepository(),
-				new FakeLeadRepository());
+				new FakeLeadRepository(),
+				new FakeProfileViewRepository());
 
 		var result = handler.handle(new GetDashboardQuery(
 				UUID.fromString("11111111-1111-1111-1111-111111111111")));

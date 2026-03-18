@@ -16,7 +16,9 @@ public record GetDashboardResult(
 	}
 
 	public record Metrics(
-			int leadCount) {
+			int viewCount,
+			int leadCount,
+			double conversionRate) {
 	}
 
 	public record LeadItem(
