@@ -3,10 +3,14 @@ package com.nm.tapprofile.tapProfileContext.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.nm.tapprofile.tapProfileContext.adapters.secondary.gateways.repositories.inmem.InMemoryLeadRepository;
 import com.nm.tapprofile.tapProfileContext.adapters.secondary.gateways.repositories.inmem.InMemoryProfileRepository;
+import com.nm.tapprofile.tapProfileContext.application.commandhandlers.CaptureLeadCommandHandler;
 import com.nm.tapprofile.tapProfileContext.application.commandhandlers.CreateProfileCommandHandler;
 import com.nm.tapprofile.tapProfileContext.application.commandhandlers.PublishProfileCommandHandler;
+import com.nm.tapprofile.tapProfileContext.application.ports.LeadRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.ProfileRepository;
+import com.nm.tapprofile.tapProfileContext.domain.services.LeadFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
 import com.nm.tapprofile.tapProfileContext.shared.time.DateTimeProvider;
 import com.nm.tapprofile.tapProfileContext.shared.time.SystemDateTimeProvider;
@@ -41,5 +45,23 @@ public class TapProfileContextDependenciesConfiguration {
 			ProfileRepository profileRepository,
 			DateTimeProvider dateTimeProvider) {
 		return new PublishProfileCommandHandler(profileRepository, dateTimeProvider);
+	}
+
+	@Bean
+	LeadRepository leadRepository() {
+		return new InMemoryLeadRepository();
+	}
+
+	@Bean
+	LeadFactory leadFactory(DateTimeProvider dateTimeProvider) {
+		return new LeadFactory(dateTimeProvider);
+	}
+
+	@Bean
+	CaptureLeadCommandHandler captureLeadCommandHandler(
+			ProfileRepository profileRepository,
+			LeadRepository leadRepository,
+			LeadFactory leadFactory) {
+		return new CaptureLeadCommandHandler(profileRepository, leadRepository, leadFactory);
 	}
 }
