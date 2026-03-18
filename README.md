@@ -1,214 +1,133 @@
 
-API REST pour le MVP "TapProfile" :
-création de profils publics, capture de leads en meetup, et dashboard simple.
+# TapProfile
+
+TapProfile est un MVP conçu pour tester un usage réel en meetup :
+permettre à une personne de partager un profil simple et de capturer des leads via QR code / lien.
 
 ---
 
-## Base URL
+# 🎯 Objectif produit
 
+Créer un flow simple :
 
-[http://localhost:8080](http://localhost:8080)
-
-
----
-
-# 🔐 Conventions
-
-- JSON uniquement
-- Pas de Spring Validation
-- Erreurs métier → JSON structuré
-- Codes HTTP cohérents
+1. Créer un profil
+2. Le publier
+3. Le partager (QR code / lien)
+4. Capturer des leads
+5. Visualiser un dashboard
 
 ---
 
-# 📌 Endpoints
+# ⚙️ Fonctionnalités actuelles
+
+- Création de profil (draft)
+- Publication de profil
+- Consultation publique via slug
+- Capture de leads
+- Tracking des vues
+- Dashboard avec :
+  - nombre de vues
+  - nombre de leads
+  - conversion rate
 
 ---
 
-## 1. Create Profile
+# 🏗️ Architecture
 
-### POST `/api/profiles`
+Architecture hexagonale (clean architecture) :
 
-Créer un profil (draft).
+````
 
-### Request
-```json
-{
-  "slug": "alex-martin",
-  "displayName": "Alex Martin",
-  "headline": "Backend developer",
-  "bio": "I build useful products."
-}
-```
-### Response (201)
-```json
-{
-  "profileId": "uuid"
-}
-```
+domain → application → adapters
 
-### Errors (400 / 409)
-```json
-{
-  "errors": [
-    {
-      "code": "field.blank",
-      "message": "Field 'slug' must not be blank",
-      "field": "slug"
-    }
-  ]
-}
+````
 
-```
+## Domain
+- Entités : Profile, Lead, ProfileView
+- Value objects : Slug, Email, etc.
+- Règles métier pures
+
+## Application
+- CommandHandlers / QueryHandlers
+- Orchestration
+- Ports (repositories)
+
+## Adapters
+- HTTP (Spring Boot)
+- Repositories in-memory
 
 ---
 
-## 2. Publish Profile
+# ❗ Gestion des erreurs
 
-### POST `/api/profiles/{profileId}/publish`
+Approche inspirée FP (Functional Programming) :
 
-### Response
+## Validation (accumulation)
+```java
+Validation<ValidationError, A>
+````
 
-* `204 No Content`
+* utilisée pour les value objects
+* accumule plusieurs erreurs
 
-### Errors
+## Result (fail-fast)
 
-* `404` → profile not found
-* `409` → already published
-
----
-
-## 3. Get Public Profile
-
-### GET `/api/public/profiles/{slug}`
-
-### Response (200)
-```json
-{
-  "profileId": "uuid",
-  "slug": "alex-martin",
-  "displayName": "Alex Martin",
-  "headline": "Backend developer",
-  "bio": "I build useful products.",
-  "publishedAt": "2026-03-17T11:00:00Z"
-}
-
+```java
+Result<DomainError, A>
 ```
 
-### Errors
+* utilisé dans les use cases
+* succès OU erreur
 
-* `404` → not found or not published
+## DomainError
 
----
-
-## 4. Register Profile View
-
-### POST `/api/public/profiles/{slug}/views`
-
-### Response
-
-* `201 Created`
-
-### Errors
-
-* `404` → profile not found
-* `404` → profile not published
+* typé
+* mappable HTTP
+* pas d’exception métier
 
 ---
 
-## 5. Capture Lead
+# 🧪 Tests
 
-### POST `/api/public/profiles/{slug}/leads`
+3 niveaux :
 
-### Request
+## 1. Domain
 
-```json
-{
-  "firstName": "Nina",
-  "email": "nina@example.com",
-  "message": "Hello Alex"
-}
-```
+* tests purs
+* aucune dépendance framework
 
-### Response (201)
+## 2. Application
 
-```json
-{
-  "leadId": "uuid"
-}
-```
+* handlers testés avec fakes
+* pas de mocks
 
-### Errors (400)
+## 3. Integration (HTTP)
 
-```json
-{
-  "errors": [
-    {
-      "code": "email.invalid",
-      "message": "Field 'email' must be a valid email address",
-      "field": "email"
-    }
-  ]
-}
-```
+* `MockMvc`
+* tests des controllers
+* wiring complet
 
 ---
 
-## 6. Get Dashboard
+# 🔥 Philosophie
 
-### GET `/api/profiles/{profileId}/dashboard`
-
-### Response (200)
-
-```json
-{
-  "profile": {
-    "profileId": "uuid",
-    "slug": "alex-martin",
-    "displayName": "Alex Martin",
-    "status": "PUBLISHED"
-  },
-  "metrics": {
-    "viewCount": 10,
-    "leadCount": 3,
-    "conversionRate": 30.0
-  },
-  "recentLeads": [
-    {
-      "leadId": "uuid",
-      "firstName": "Nina",
-      "email": "nina@example.com",
-      "message": "Hello Alex",
-      "createdAt": "2026-03-17T15:00:00Z"
-    }
-  ]
-}
-```
+* pas de logique métier dans les controllers
+* pas de validation Spring
+* pas d’exceptions métier
+* code testable en isolation
+* approche pragmatique (pas dogmatique FP)
 
 ---
 
-# ⚠️ Error Model
+# 🚀 État du projet
 
-```json
-{
-  "errors": [
-    {
-      "code": "string",
-      "message": "string",
-      "field": "optional"
-    }
-  ]
-}
-```
+Backend MVP complet :
 
----
+* API REST fonctionnelle
+* flow complet validé
+* prêt pour test réel
 
-# 🧠 Notes Front
-
-* Le `slug` est l'identifiant public
-* Le `profileId` est l'identifiant interne
-* `conversionRate` = `(leadCount / viewCount) * 100`
-* Aucun auth pour le MVP
-
+Prochaine étape :
+👉 Front (React) + test terrain meetup
 
 ---
