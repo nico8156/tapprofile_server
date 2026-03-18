@@ -10,6 +10,7 @@ import com.nm.tapprofile.tapProfileContext.application.commandhandlers.CreatePro
 import com.nm.tapprofile.tapProfileContext.application.commandhandlers.PublishProfileCommandHandler;
 import com.nm.tapprofile.tapProfileContext.application.ports.LeadRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.ProfileRepository;
+import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetDashboardQueryHandler;
 import com.nm.tapprofile.tapProfileContext.domain.services.LeadFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
 import com.nm.tapprofile.tapProfileContext.shared.time.DateTimeProvider;
@@ -63,5 +64,12 @@ public class TapProfileContextDependenciesConfiguration {
 			LeadRepository leadRepository,
 			LeadFactory leadFactory) {
 		return new CaptureLeadCommandHandler(profileRepository, leadRepository, leadFactory);
+	}
+
+	@Bean
+	GetDashboardQueryHandler getDashboardQueryHandler(
+			ProfileRepository profileRepository,
+			LeadRepository leadRepository) {
+		return new GetDashboardQueryHandler(profileRepository, leadRepository);
 	}
 }
