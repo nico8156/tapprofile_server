@@ -14,6 +14,7 @@ import com.nm.tapprofile.tapProfileContext.application.ports.LeadRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.ProfileRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.ProfileViewRepository;
 import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetDashboardQueryHandler;
+import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetPublicProfileQueryHandler;
 import com.nm.tapprofile.tapProfileContext.domain.services.LeadFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileViewFactory;
@@ -97,6 +98,12 @@ public class TapProfileContextDependenciesConfiguration {
 			LeadRepository leadRepository,
 			ProfileViewRepository profileViewRepository) {
 		return new GetDashboardQueryHandler(profileRepository, leadRepository, profileViewRepository);
+	}
+
+	@Bean
+	GetPublicProfileQueryHandler getPublicProfileQueryHandler(
+			ProfileRepository profileRepository) {
+		return new GetPublicProfileQueryHandler(profileRepository);
 	}
 
 }
