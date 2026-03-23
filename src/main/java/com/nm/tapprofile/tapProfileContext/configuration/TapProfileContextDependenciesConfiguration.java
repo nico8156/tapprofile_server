@@ -20,6 +20,7 @@ import com.nm.tapprofile.tapProfileContext.application.ports.ProfileRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.ProfileViewRepository;
 import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetDashboardQueryHandler;
 import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetConnectionsQueryHandler;
+import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetProfileBadgeQueryHandler;
 import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetPublicBadgeQueryHandler;
 import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetPublicProfileQueryHandler;
 import com.nm.tapprofile.tapProfileContext.domain.services.BadgeFactory;
@@ -167,6 +168,13 @@ public class TapProfileContextDependenciesConfiguration {
 			ProfileRepository profileRepository,
 			ConnectionRepository connectionRepository) {
 		return new GetConnectionsQueryHandler(profileRepository, connectionRepository);
+	}
+
+	@Bean
+	GetProfileBadgeQueryHandler getProfileBadgeQueryHandler(
+			ProfileRepository profileRepository,
+			BadgeRepository badgeRepository) {
+		return new GetProfileBadgeQueryHandler(profileRepository, badgeRepository);
 	}
 
 }
