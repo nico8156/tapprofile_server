@@ -5,7 +5,10 @@ public sealed interface DomainError permits
 		SlugAlreadyTakenError,
 		ProfileNotFoundError,
 		ProfileAlreadyPublishedError,
-		ProfileNotPublishedError {
+		ProfileNotPublishedError,
+		BadgeNotFoundError,
+		BadgeRevokedError,
+		ConnectionAlreadySelfError {
 	String code();
 
 	String message();

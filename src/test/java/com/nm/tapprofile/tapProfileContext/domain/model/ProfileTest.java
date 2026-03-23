@@ -15,6 +15,7 @@ class ProfileTest {
 				ProfileId.newId(),
 				new Slug("alex-martin"),
 				new DisplayName("Alex Martin"),
+				ProfileRole.EXHIBITOR,
 				new Headline("Backend developer"),
 				new Bio("I build useful products."),
 				ProfileStatus.DRAFT,
@@ -28,6 +29,7 @@ class ProfileTest {
 		assertTrue(result.isSuccess());
 		var publishedProfile = result.getSuccess();
 		assertEquals(ProfileStatus.PUBLISHED, publishedProfile.status());
+		assertEquals(ProfileRole.EXHIBITOR, publishedProfile.role());
 		assertEquals(publishedAt, publishedProfile.publishedAt());
 	}
 
@@ -37,6 +39,7 @@ class ProfileTest {
 				ProfileId.newId(),
 				new Slug("alex-martin"),
 				new DisplayName("Alex Martin"),
+				ProfileRole.VISITOR,
 				new Headline("Backend developer"),
 				new Bio("I build useful products."),
 				ProfileStatus.PUBLISHED,

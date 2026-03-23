@@ -1,5 +1,6 @@
 package com.nm.tapprofile.tapProfileContext.application.queryhandlers;
 
+import com.nm.tapprofile.tapProfileContext.application.ports.ConnectionRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.LeadRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.ProfileRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.ProfileViewRepository;
@@ -15,14 +16,17 @@ import java.util.Comparator;
 public final class GetDashboardQueryHandler {
 
 	private final ProfileRepository profileRepository;
+	private final ConnectionRepository connectionRepository;
 	private final LeadRepository leadRepository;
 	private final ProfileViewRepository profileViewRepository;
 
 	public GetDashboardQueryHandler(
 			ProfileRepository profileRepository,
+			ConnectionRepository connectionRepository,
 			LeadRepository leadRepository,
 			ProfileViewRepository profileViewRepository) {
 		this.profileRepository = profileRepository;
+		this.connectionRepository = connectionRepository;
 		this.leadRepository = leadRepository;
 		this.profileViewRepository = profileViewRepository;
 	}
@@ -52,7 +56,9 @@ public final class GetDashboardQueryHandler {
 				.toList();
 
 		int viewCount = profileViewRepository.findByProfileId(profileId).size();
+		int scanCount = viewCount;
 		int leadCount = leadItems.size();
+		int connectionCount = connectionRepository.findByProfileId(profileId).size();
 		double conversionRate = viewCount == 0 ? 0.0 : ((double) leadCount / viewCount) * 100.0;
 
 		return Result.success(new GetDashboardResult(
@@ -60,10 +66,13 @@ public final class GetDashboardQueryHandler {
 						profile.id().value(),
 						profile.slug().value(),
 						profile.displayName().value(),
+						profile.role().name(),
 						profile.status().name()),
 				new GetDashboardResult.Metrics(
 						viewCount,
+						scanCount,
 						leadCount,
+						connectionCount,
 						conversionRate),
 				leadItems));
 	}

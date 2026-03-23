@@ -43,6 +43,7 @@ public final class GetPublicProfileQueryHandler {
 				profile.id().value(),
 				profile.slug().value(),
 				profile.displayName().value(),
+				profile.role().name(),
 				profile.headline().value(),
 				profile.bio().value(),
 				profile.publishedAt()));

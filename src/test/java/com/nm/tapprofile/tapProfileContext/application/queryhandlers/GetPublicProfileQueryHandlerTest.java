@@ -7,7 +7,9 @@ import com.nm.tapprofile.tapProfileContext.application.commands.PublishProfileCo
 import com.nm.tapprofile.tapProfileContext.application.queries.GetPublicProfileQuery;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotFoundError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotPublishedError;
+import com.nm.tapprofile.tapProfileContext.domain.services.BadgeFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeBadgeRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.time.FixedDateTimeProvider;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,9 @@ class GetPublicProfileQueryHandlerTest {
 
 		var createHandler = new CreateProfileCommandHandler(
 				repository,
-				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
+				new FakeBadgeRepository(),
+				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
+				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var createResult = createHandler.handle(new CreateProfileCommand(
 				"alex-martin",
@@ -49,6 +53,7 @@ class GetPublicProfileQueryHandlerTest {
 		var publicProfile = result.getSuccess();
 		assertEquals("alex-martin", publicProfile.slug());
 		assertEquals("Alex Martin", publicProfile.displayName());
+		assertEquals("VISITOR", publicProfile.role());
 		assertEquals("Backend developer", publicProfile.headline());
 		assertEquals("I build useful products.", publicProfile.bio());
 		assertEquals(Instant.parse("2026-03-17T11:00:00Z"), publicProfile.publishedAt());
@@ -71,7 +76,9 @@ class GetPublicProfileQueryHandlerTest {
 
 		var createHandler = new CreateProfileCommandHandler(
 				repository,
-				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
+				new FakeBadgeRepository(),
+				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
+				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		createHandler.handle(new CreateProfileCommand(
 				"alex-martin",

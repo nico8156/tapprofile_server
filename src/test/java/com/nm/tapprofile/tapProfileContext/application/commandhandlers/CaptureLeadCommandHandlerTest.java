@@ -6,8 +6,10 @@ import com.nm.tapprofile.tapProfileContext.application.commands.PublishProfileCo
 import com.nm.tapprofile.tapProfileContext.domain.errors.FieldBlankError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotFoundError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotPublishedError;
+import com.nm.tapprofile.tapProfileContext.domain.services.BadgeFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.LeadFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeBadgeRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeLeadRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.time.FixedDateTimeProvider;
@@ -26,7 +28,9 @@ class CaptureLeadCommandHandlerTest {
 
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
-				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
+				new FakeBadgeRepository(),
+				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
+				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var createResult = createHandler.handle(new CreateProfileCommand(
 				"alex-martin",
@@ -85,7 +89,9 @@ class CaptureLeadCommandHandlerTest {
 
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
-				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
+				new FakeBadgeRepository(),
+				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
+				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		createHandler.handle(new CreateProfileCommand(
 				"alex-martin",
@@ -115,7 +121,9 @@ class CaptureLeadCommandHandlerTest {
 
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
-				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
+				new FakeBadgeRepository(),
+				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
+				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var createResult = createHandler.handle(new CreateProfileCommand(
 				"alex-martin",

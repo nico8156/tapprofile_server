@@ -53,7 +53,8 @@ class PublicProfileControllerIT {
 		mockMvc.perform(get("/api/public/profiles/alex-public"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.slug").value("alex-public"))
-				.andExpect(jsonPath("$.displayName").value("Alex Public"));
+				.andExpect(jsonPath("$.displayName").value("Alex Public"))
+				.andExpect(jsonPath("$.role").value("VISITOR"));
 	}
 
 	@Test

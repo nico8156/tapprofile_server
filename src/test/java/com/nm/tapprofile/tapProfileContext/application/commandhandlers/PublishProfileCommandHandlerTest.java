@@ -4,8 +4,10 @@ import com.nm.tapprofile.tapProfileContext.application.commands.CreateProfileCom
 import com.nm.tapprofile.tapProfileContext.application.commands.PublishProfileCommand;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileAlreadyPublishedError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotFoundError;
+import com.nm.tapprofile.tapProfileContext.domain.services.BadgeFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
 import com.nm.tapprofile.tapProfileContext.shared.result.Unit;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeBadgeRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.time.FixedDateTimeProvider;
 import org.junit.jupiter.api.Test;
@@ -20,9 +22,11 @@ class PublishProfileCommandHandlerTest {
 	@Test
 	void should_publish_existing_draft_profile() {
 		var repository = new FakeProfileRepository();
+		var badgeRepository = new FakeBadgeRepository();
 		var createFactory = new ProfileFactory(
 				new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")));
-		var createHandler = new CreateProfileCommandHandler(repository, createFactory);
+		var badgeFactory = new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")));
+		var createHandler = new CreateProfileCommandHandler(repository, badgeRepository, createFactory, badgeFactory);
 
 		var createResult = createHandler.handle(new CreateProfileCommand(
 				"alex-martin",
@@ -64,9 +68,11 @@ class PublishProfileCommandHandlerTest {
 	@Test
 	void should_fail_when_profile_is_already_published() {
 		var repository = new FakeProfileRepository();
+		var badgeRepository = new FakeBadgeRepository();
 		var createFactory = new ProfileFactory(
 				new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")));
-		var createHandler = new CreateProfileCommandHandler(repository, createFactory);
+		var badgeFactory = new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")));
+		var createHandler = new CreateProfileCommandHandler(repository, badgeRepository, createFactory, badgeFactory);
 
 		var createResult = createHandler.handle(new CreateProfileCommand(
 				"alex-martin",

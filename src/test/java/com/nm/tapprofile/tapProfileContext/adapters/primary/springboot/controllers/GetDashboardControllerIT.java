@@ -70,6 +70,7 @@ class GetDashboardControllerIT {
 		mockMvc.perform(get("/api/profiles/" + profileId + "/dashboard"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.profile.slug").value("alex-dashboard"))
+				.andExpect(jsonPath("$.profile.role").value("VISITOR"))
 				.andExpect(jsonPath("$.metrics.viewCount").value(2))
 				.andExpect(jsonPath("$.metrics.leadCount").value(1))
 				.andExpect(jsonPath("$.recentLeads[0].firstName").value("Nina"));

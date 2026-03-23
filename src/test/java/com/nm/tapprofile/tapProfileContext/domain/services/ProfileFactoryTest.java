@@ -18,6 +18,7 @@ class ProfileFactoryTest {
 		var result = factory.createDraft(
 				"alex-martin",
 				"Alex Martin",
+				"EXHIBITOR",
 				"Backend developer",
 				"I build useful products.");
 
@@ -27,6 +28,7 @@ class ProfileFactoryTest {
 		assertEquals(ProfileStatus.DRAFT, profile.status());
 		assertEquals(fixedNow, profile.createdAt());
 		assertEquals("alex-martin", profile.slug().value());
+		assertEquals(com.nm.tapprofile.tapProfileContext.domain.model.ProfileRole.EXHIBITOR, profile.role());
 	}
 
 	@Test
@@ -37,6 +39,7 @@ class ProfileFactoryTest {
 		var result = factory.createDraft(
 				"A B",
 				"",
+				"INVALID",
 				"",
 				"x".repeat(501));
 

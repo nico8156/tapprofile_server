@@ -29,6 +29,7 @@ public class PublicProfileController {
 				profile.profileId(),
 				profile.slug(),
 				profile.displayName(),
+				profile.role(),
 				profile.headline(),
 				profile.bio(),
 				profile.publishedAt()));

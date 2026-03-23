@@ -2,6 +2,9 @@ package com.nm.tapprofile.tapProfileContext.adapters.primary.springboot.controll
 
 import com.nm.tapprofile.tapProfileContext.adapters.primary.springboot.dto.ErrorHttpResponse;
 import com.nm.tapprofile.tapProfileContext.adapters.primary.springboot.dto.ErrorItemHttpResponse;
+import com.nm.tapprofile.tapProfileContext.domain.errors.BadgeNotFoundError;
+import com.nm.tapprofile.tapProfileContext.domain.errors.BadgeRevokedError;
+import com.nm.tapprofile.tapProfileContext.domain.errors.ConnectionAlreadySelfError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.DomainError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileAlreadyPublishedError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotFoundError;
@@ -50,8 +53,11 @@ public final class ApiExceptionHandler {
 		return switch (error) {
 			case ProfileNotFoundError ignored -> HttpStatus.NOT_FOUND;
 			case ProfileNotPublishedError ignored -> HttpStatus.NOT_FOUND;
+			case BadgeNotFoundError ignored -> HttpStatus.NOT_FOUND;
+			case BadgeRevokedError ignored -> HttpStatus.NOT_FOUND;
 			case SlugAlreadyTakenError ignored -> HttpStatus.CONFLICT;
 			case ProfileAlreadyPublishedError ignored -> HttpStatus.CONFLICT;
+			case ConnectionAlreadySelfError ignored -> HttpStatus.BAD_REQUEST;
 			case ValidationError ignored -> HttpStatus.BAD_REQUEST;
 		};
 	}

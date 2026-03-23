@@ -12,12 +12,15 @@ public record GetDashboardHttpResponse(
 			UUID profileId,
 			String slug,
 			String displayName,
+			String role,
 			String status) {
 	}
 
 	public record Metrics(
 			int viewCount,
+			int scanCount,
 			int leadCount,
+			int connectionCount,
 			double conversionRate) {
 	}
 

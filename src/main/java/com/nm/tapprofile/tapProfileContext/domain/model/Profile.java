@@ -12,6 +12,7 @@ public final class Profile {
 	private final ProfileId id;
 	private final Slug slug;
 	private final DisplayName displayName;
+	private final ProfileRole role;
 	private final Headline headline;
 	private final Bio bio;
 	private final ProfileStatus status;
@@ -22,6 +23,7 @@ public final class Profile {
 			ProfileId id,
 			Slug slug,
 			DisplayName displayName,
+			ProfileRole role,
 			Headline headline,
 			Bio bio,
 			ProfileStatus status,
@@ -30,6 +32,7 @@ public final class Profile {
 		this.id = Objects.requireNonNull(id);
 		this.slug = Objects.requireNonNull(slug);
 		this.displayName = Objects.requireNonNull(displayName);
+		this.role = Objects.requireNonNull(role);
 		this.headline = Objects.requireNonNull(headline);
 		this.bio = Objects.requireNonNull(bio);
 		this.status = Objects.requireNonNull(status);
@@ -47,6 +50,10 @@ public final class Profile {
 
 	public DisplayName displayName() {
 		return displayName;
+	}
+
+	public ProfileRole role() {
+		return role;
 	}
 
 	public Headline headline() {
@@ -78,6 +85,7 @@ public final class Profile {
 				id,
 				slug,
 				displayName,
+				role,
 				headline,
 				bio,
 				ProfileStatus.PUBLISHED,

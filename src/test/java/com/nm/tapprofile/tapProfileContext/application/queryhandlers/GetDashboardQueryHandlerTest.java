@@ -16,8 +16,11 @@ import com.nm.tapprofile.tapProfileContext.application.commands.CreateProfileCom
 import com.nm.tapprofile.tapProfileContext.application.commands.PublishProfileCommand;
 import com.nm.tapprofile.tapProfileContext.application.queries.GetDashboardQuery;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotFoundError;
+import com.nm.tapprofile.tapProfileContext.domain.services.BadgeFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.LeadFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeBadgeRepository;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeConnectionRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeLeadRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileViewRepository;
@@ -30,9 +33,12 @@ class GetDashboardQueryHandlerTest {
 		var profileRepository = new FakeProfileRepository();
 		var leadRepository = new FakeLeadRepository();
 		var profileViewRepository = new FakeProfileViewRepository();
+		var connectionRepository = new FakeConnectionRepository();
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
-				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
+				new FakeBadgeRepository(),
+				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
+				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var createResult = createHandler.handle(new CreateProfileCommand(
 				"alex-martin",
@@ -67,7 +73,11 @@ class GetDashboardQueryHandlerTest {
 				"marc@example.com",
 				"Let's talk soon"));
 
-		var handler = new GetDashboardQueryHandler(profileRepository, leadRepository, profileViewRepository);
+		var handler = new GetDashboardQueryHandler(
+				profileRepository,
+				connectionRepository,
+				leadRepository,
+				profileViewRepository);
 
 		var result = handler.handle(new GetDashboardQuery(profileId.value()));
 
@@ -77,9 +87,12 @@ class GetDashboardQueryHandlerTest {
 		assertEquals(profileId.value(), dashboard.profile().profileId());
 		assertEquals("alex-martin", dashboard.profile().slug());
 		assertEquals("Alex Martin", dashboard.profile().displayName());
+		assertEquals("VISITOR", dashboard.profile().role());
 		assertEquals("PUBLISHED", dashboard.profile().status());
 
+		assertEquals(0, dashboard.metrics().connectionCount());
 		assertEquals(2, dashboard.metrics().leadCount());
+		assertEquals(0, dashboard.metrics().scanCount());
 		assertEquals(2, dashboard.recentLeads().size());
 
 		assertEquals("Marc", dashboard.recentLeads().get(0).firstName());
@@ -94,9 +107,12 @@ class GetDashboardQueryHandlerTest {
 		var profileRepository = new FakeProfileRepository();
 		var leadRepository = new FakeLeadRepository();
 		var profileViewRepository = new FakeProfileViewRepository();
+		var connectionRepository = new FakeConnectionRepository();
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
-				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
+				new FakeBadgeRepository(),
+				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
+				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var createResult = createHandler.handle(new CreateProfileCommand(
 				"alex-martin",
@@ -104,7 +120,11 @@ class GetDashboardQueryHandlerTest {
 				"Backend developer",
 				"I build useful products."));
 
-		var handler = new GetDashboardQueryHandler(profileRepository, leadRepository, profileViewRepository);
+		var handler = new GetDashboardQueryHandler(
+				profileRepository,
+				connectionRepository,
+				leadRepository,
+				profileViewRepository);
 
 		var result = handler.handle(new GetDashboardQuery(createResult.getSuccess().value()));
 
@@ -113,6 +133,7 @@ class GetDashboardQueryHandlerTest {
 		var dashboard = result.getSuccess();
 		assertEquals(0, dashboard.metrics().leadCount());
 		assertTrue(dashboard.recentLeads().isEmpty());
+		assertEquals("VISITOR", dashboard.profile().role());
 		assertEquals("DRAFT", dashboard.profile().status());
 	}
 
@@ -120,6 +141,7 @@ class GetDashboardQueryHandlerTest {
 	void should_fail_when_profile_does_not_exist() {
 		var handler = new GetDashboardQueryHandler(
 				new FakeProfileRepository(),
+				new FakeConnectionRepository(),
 				new FakeLeadRepository(),
 				new FakeProfileViewRepository());
 

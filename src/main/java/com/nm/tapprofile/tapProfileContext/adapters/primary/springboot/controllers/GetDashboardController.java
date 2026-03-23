@@ -33,10 +33,13 @@ public class GetDashboardController {
 						dashboard.profile().profileId(),
 						dashboard.profile().slug(),
 						dashboard.profile().displayName(),
+						dashboard.profile().role(),
 						dashboard.profile().status()),
 				new GetDashboardHttpResponse.Metrics(
 						dashboard.metrics().viewCount(),
+						dashboard.metrics().scanCount(),
 						dashboard.metrics().leadCount(),
+						dashboard.metrics().connectionCount(),
 						dashboard.metrics().conversionRate()),
 				dashboard.recentLeads().stream()
 						.map(lead -> new GetDashboardHttpResponse.LeadItem(

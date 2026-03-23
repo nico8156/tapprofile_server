@@ -7,6 +7,7 @@ public record GetPublicProfileResult(
 		UUID profileId,
 		String slug,
 		String displayName,
+		String role,
 		String headline,
 		String bio,
 		Instant publishedAt) {
