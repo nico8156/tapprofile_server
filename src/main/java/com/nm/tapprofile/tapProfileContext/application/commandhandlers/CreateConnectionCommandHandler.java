@@ -73,6 +73,12 @@ public final class CreateConnectionCommandHandler {
 			return Result.failure(new ProfileNotPublishedError(scannedProfile.slug().value()));
 		}
 
+		var existingConnection = connectionRepository.findByProfileIds(scannerProfileId, badge.profileId());
+
+		if (existingConnection.isPresent()) {
+			return Result.success(existingConnection.get().id());
+		}
+
 		Connection connection = connectionFactory.create(scannerProfileId, badge.profileId());
 		connectionRepository.save(connection);
 

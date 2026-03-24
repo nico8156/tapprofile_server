@@ -6,6 +6,7 @@ import com.nm.tapprofile.tapProfileContext.domain.model.ProfileId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class FakeConnectionRepository implements ConnectionRepository {
 
@@ -22,5 +23,17 @@ public final class FakeConnectionRepository implements ConnectionRepository {
 				.filter(connection -> connection.scannerProfileId().equals(profileId)
 						|| connection.scannedProfileId().equals(profileId))
 				.toList();
+	}
+
+	@Override
+	public Optional<Connection> findByProfileIds(ProfileId firstProfileId, ProfileId secondProfileId) {
+		return connections.stream()
+				.filter(connection -> isSamePair(connection, firstProfileId, secondProfileId))
+				.findFirst();
+	}
+
+	private boolean isSamePair(Connection connection, ProfileId firstProfileId, ProfileId secondProfileId) {
+		return connection.scannerProfileId().equals(firstProfileId) && connection.scannedProfileId().equals(secondProfileId)
+				|| connection.scannerProfileId().equals(secondProfileId) && connection.scannedProfileId().equals(firstProfileId);
 	}
 }
