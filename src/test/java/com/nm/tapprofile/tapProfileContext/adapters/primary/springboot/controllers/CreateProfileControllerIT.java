@@ -30,6 +30,7 @@ class CreateProfileControllerIT {
 		var request = new CreateProfileHttpRequest(
 				"alex-martin",
 				"Alex Martin",
+				"alex@example.com",
 				"Backend developer",
 				"I build useful products.");
 
@@ -43,6 +44,7 @@ class CreateProfileControllerIT {
 	@Test
 	void should_return_bad_request_when_request_is_invalid() throws Exception {
 		var request = new CreateProfileHttpRequest(
+				"",
 				"",
 				"",
 				"",

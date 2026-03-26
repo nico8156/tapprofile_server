@@ -8,9 +8,12 @@ import com.nm.tapprofile.tapProfileContext.domain.errors.ConnectionAlreadySelfEr
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotPublishedError;
 import com.nm.tapprofile.tapProfileContext.domain.services.BadgeFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ConnectionFactory;
+import com.nm.tapprofile.tapProfileContext.domain.services.MagicLinkFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeBadgeRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeConnectionRepository;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeMagicLinkEmailSender;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeMagicLinkRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.time.FixedDateTimeProvider;
 import org.junit.jupiter.api.Test;
@@ -30,18 +33,23 @@ class CreateConnectionCommandHandlerTest {
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
 				badgeRepository,
+				new FakeMagicLinkRepository(),
+				new MagicLinkFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")), java.time.Duration.ofDays(30)),
+				new FakeMagicLinkEmailSender(),
 				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
 				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var scannerProfileId = createHandler.handle(new CreateProfileCommand(
 				"scanner-profile",
 				"Scanner Profile",
+				"scanner@example.com",
 				"Backend developer",
 				"I scan badges.")).getSuccess();
 
 		var scannedProfileId = createHandler.handle(new CreateProfileCommand(
 				"scanned-profile",
 				"Scanned Profile",
+				"scanned@example.com",
 				"Product engineer",
 				"I get scanned.")).getSuccess();
 
@@ -77,11 +85,15 @@ class CreateConnectionCommandHandlerTest {
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
 				badgeRepository,
+				new FakeMagicLinkRepository(),
+				new MagicLinkFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")), java.time.Duration.ofDays(30)),
+				new FakeMagicLinkEmailSender(),
 				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
 				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 		var scannerProfileId = createHandler.handle(new CreateProfileCommand(
 				"scanner-missing-badge",
 				"Scanner Missing Badge",
+				"scanner@example.com",
 				"Developer",
 				"I need a badge token.")).getSuccess();
 
@@ -107,12 +119,16 @@ class CreateConnectionCommandHandlerTest {
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
 				badgeRepository,
+				new FakeMagicLinkRepository(),
+				new MagicLinkFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")), java.time.Duration.ofDays(30)),
+				new FakeMagicLinkEmailSender(),
 				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
 				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var profileId = createHandler.handle(new CreateProfileCommand(
 				"self-profile",
 				"Self Profile",
+				"self@example.com",
 				"Developer",
 				"I scan myself.")).getSuccess();
 
@@ -138,18 +154,23 @@ class CreateConnectionCommandHandlerTest {
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
 				badgeRepository,
+				new FakeMagicLinkRepository(),
+				new MagicLinkFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")), java.time.Duration.ofDays(30)),
+				new FakeMagicLinkEmailSender(),
 				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
 				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var scannerProfileId = createHandler.handle(new CreateProfileCommand(
 				"scanner-draft",
 				"Scanner Draft",
+				"scanner@example.com",
 				"Developer",
 				"I scan.")).getSuccess();
 
 		var scannedProfileId = createHandler.handle(new CreateProfileCommand(
 				"scanned-draft",
 				"Scanned Draft",
+				"scanned@example.com",
 				"Designer",
 				"I stay draft.")).getSuccess();
 
@@ -176,18 +197,23 @@ class CreateConnectionCommandHandlerTest {
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
 				badgeRepository,
+				new FakeMagicLinkRepository(),
+				new MagicLinkFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")), java.time.Duration.ofDays(30)),
+				new FakeMagicLinkEmailSender(),
 				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
 				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var firstProfileId = createHandler.handle(new CreateProfileCommand(
 				"first-profile",
 				"First Profile",
+				"first@example.com",
 				"Backend developer",
 				"I scan first.")).getSuccess();
 
 		var secondProfileId = createHandler.handle(new CreateProfileCommand(
 				"second-profile",
 				"Second Profile",
+				"second@example.com",
 				"Product engineer",
 				"I scan second.")).getSuccess();
 

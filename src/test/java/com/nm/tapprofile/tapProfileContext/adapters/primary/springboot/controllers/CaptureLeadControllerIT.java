@@ -34,6 +34,7 @@ class CaptureLeadControllerIT {
 		var createRequest = new CreateProfileHttpRequest(
 				"alex-lead",
 				"Alex Lead",
+				"alex-lead@example.com",
 				"Backend developer",
 				"I build useful products.");
 

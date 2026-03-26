@@ -18,6 +18,7 @@ class ProfileFactoryTest {
 		var result = factory.createDraft(
 				"alex-martin",
 				"Alex Martin",
+				"alex@example.com",
 				"EXHIBITOR",
 				"Backend developer",
 				"I build useful products.");
@@ -38,6 +39,7 @@ class ProfileFactoryTest {
 
 		var result = factory.createDraft(
 				"A B",
+				"",
 				"",
 				"INVALID",
 				"",

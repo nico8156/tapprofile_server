@@ -37,6 +37,7 @@ class GetProfileBadgeControllerIT {
 		var createRequest = new CreateProfileHttpRequest(
 				"alex-profile-badge-it",
 				"Alex Profile Badge IT",
+				"alex-profile-badge-it@example.com",
 				"EXHIBITOR",
 				"Backend developer",
 				"I share my badge.");

@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import com.nm.tapprofile.tapProfileContext.adapters.secondary.gateways.repositories.inmem.InMemoryBadgeRepository;
 import com.nm.tapprofile.tapProfileContext.adapters.secondary.gateways.repositories.inmem.InMemoryConnectionRepository;
 import com.nm.tapprofile.tapProfileContext.adapters.secondary.gateways.repositories.inmem.InMemoryLeadRepository;
+import com.nm.tapprofile.tapProfileContext.adapters.secondary.gateways.repositories.inmem.InMemoryMagicLinkEmailSender;
+import com.nm.tapprofile.tapProfileContext.adapters.secondary.gateways.repositories.inmem.InMemoryMagicLinkRepository;
 import com.nm.tapprofile.tapProfileContext.adapters.secondary.gateways.repositories.inmem.InMemoryProfileRepository;
 import com.nm.tapprofile.tapProfileContext.adapters.secondary.gateways.repositories.inmem.InMemoryProfileViewRepository;
 import com.nm.tapprofile.tapProfileContext.application.commandhandlers.CreateConnectionCommandHandler;
@@ -16,20 +18,26 @@ import com.nm.tapprofile.tapProfileContext.application.commandhandlers.RegisterP
 import com.nm.tapprofile.tapProfileContext.application.ports.BadgeRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.ConnectionRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.LeadRepository;
+import com.nm.tapprofile.tapProfileContext.application.ports.MagicLinkEmailSender;
+import com.nm.tapprofile.tapProfileContext.application.ports.MagicLinkRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.ProfileRepository;
 import com.nm.tapprofile.tapProfileContext.application.ports.ProfileViewRepository;
 import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetDashboardQueryHandler;
 import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetConnectionsQueryHandler;
+import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetMagicLinkQueryHandler;
 import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetProfileBadgeQueryHandler;
 import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetPublicBadgeQueryHandler;
 import com.nm.tapprofile.tapProfileContext.application.queryhandlers.GetPublicProfileQueryHandler;
 import com.nm.tapprofile.tapProfileContext.domain.services.BadgeFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ConnectionFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.LeadFactory;
+import com.nm.tapprofile.tapProfileContext.domain.services.MagicLinkFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileViewFactory;
 import com.nm.tapprofile.tapProfileContext.shared.time.DateTimeProvider;
 import com.nm.tapprofile.tapProfileContext.shared.time.SystemDateTimeProvider;
+
+import java.time.Duration;
 
 @Configuration
 public class TapProfileContextDependenciesConfiguration {
@@ -50,6 +58,11 @@ public class TapProfileContextDependenciesConfiguration {
 	}
 
 	@Bean
+	MagicLinkRepository magicLinkRepository() {
+		return new InMemoryMagicLinkRepository();
+	}
+
+	@Bean
 	ConnectionRepository connectionRepository() {
 		return new InMemoryConnectionRepository();
 	}
@@ -65,6 +78,16 @@ public class TapProfileContextDependenciesConfiguration {
 	}
 
 	@Bean
+	MagicLinkFactory magicLinkFactory(DateTimeProvider dateTimeProvider) {
+		return new MagicLinkFactory(dateTimeProvider, Duration.ofDays(30));
+	}
+
+	@Bean
+	MagicLinkEmailSender magicLinkEmailSender() {
+		return new InMemoryMagicLinkEmailSender();
+	}
+
+	@Bean
 	ConnectionFactory connectionFactory(DateTimeProvider dateTimeProvider) {
 		return new ConnectionFactory(dateTimeProvider);
 	}
@@ -73,9 +96,19 @@ public class TapProfileContextDependenciesConfiguration {
 	CreateProfileCommandHandler createProfileCommandHandler(
 			ProfileRepository profileRepository,
 			BadgeRepository badgeRepository,
+			MagicLinkRepository magicLinkRepository,
+			MagicLinkFactory magicLinkFactory,
+			MagicLinkEmailSender magicLinkEmailSender,
 			ProfileFactory profileFactory,
 			BadgeFactory badgeFactory) {
-		return new CreateProfileCommandHandler(profileRepository, badgeRepository, profileFactory, badgeFactory);
+		return new CreateProfileCommandHandler(
+				profileRepository,
+				badgeRepository,
+				magicLinkRepository,
+				magicLinkFactory,
+				magicLinkEmailSender,
+				profileFactory,
+				badgeFactory);
 	}
 
 	@Bean
@@ -168,6 +201,19 @@ public class TapProfileContextDependenciesConfiguration {
 			ProfileRepository profileRepository,
 			ConnectionRepository connectionRepository) {
 		return new GetConnectionsQueryHandler(profileRepository, connectionRepository);
+	}
+
+	@Bean
+	GetMagicLinkQueryHandler getMagicLinkQueryHandler(
+			MagicLinkRepository magicLinkRepository,
+			ProfileRepository profileRepository,
+			ConnectionRepository connectionRepository,
+			DateTimeProvider dateTimeProvider) {
+		return new GetMagicLinkQueryHandler(
+				magicLinkRepository,
+				profileRepository,
+				connectionRepository,
+				dateTimeProvider);
 	}
 
 	@Bean

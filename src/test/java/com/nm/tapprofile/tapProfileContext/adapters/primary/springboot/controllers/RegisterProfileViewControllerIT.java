@@ -32,6 +32,7 @@ class RegisterProfileViewControllerIT {
 		var createRequest = new CreateProfileHttpRequest(
 				"alex-view",
 				"Alex View",
+				"alex-view@example.com",
 				"Backend developer",
 				"I build useful products.");
 

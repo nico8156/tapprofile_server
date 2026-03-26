@@ -5,8 +5,11 @@ import com.nm.tapprofile.tapProfileContext.application.commandhandlers.CreatePro
 import com.nm.tapprofile.tapProfileContext.application.queries.GetProfileBadgeQuery;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotFoundError;
 import com.nm.tapprofile.tapProfileContext.domain.services.BadgeFactory;
+import com.nm.tapprofile.tapProfileContext.domain.services.MagicLinkFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeBadgeRepository;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeMagicLinkEmailSender;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeMagicLinkRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.time.FixedDateTimeProvider;
 import org.junit.jupiter.api.Test;
@@ -26,12 +29,16 @@ class GetProfileBadgeQueryHandlerTest {
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
 				badgeRepository,
+				new FakeMagicLinkRepository(),
+				new MagicLinkFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")), java.time.Duration.ofDays(30)),
+				new FakeMagicLinkEmailSender(),
 				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
 				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var profileId = createHandler.handle(new CreateProfileCommand(
 				"alex-profile-badge",
 				"Alex Profile Badge",
+				"alex@example.com",
 				"Backend developer",
 				"I share my badge.")).getSuccess();
 

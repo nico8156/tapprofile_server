@@ -6,9 +6,12 @@ import com.nm.tapprofile.tapProfileContext.application.commands.RegisterProfileV
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotFoundError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotPublishedError;
 import com.nm.tapprofile.tapProfileContext.domain.services.BadgeFactory;
+import com.nm.tapprofile.tapProfileContext.domain.services.MagicLinkFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileFactory;
 import com.nm.tapprofile.tapProfileContext.domain.services.ProfileViewFactory;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeBadgeRepository;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeMagicLinkEmailSender;
+import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeMagicLinkRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.repositories.FakeProfileViewRepository;
 import com.nm.tapprofile.tapProfileContext.testdoubles.time.FixedDateTimeProvider;
@@ -28,12 +31,16 @@ class RegisterProfileViewCommandHandlerTest {
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
 				new FakeBadgeRepository(),
+				new FakeMagicLinkRepository(),
+				new MagicLinkFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")), java.time.Duration.ofDays(30)),
+				new FakeMagicLinkEmailSender(),
 				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
 				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		var createResult = createHandler.handle(new CreateProfileCommand(
 				"alex-martin",
 				"Alex Martin",
+				"alex@example.com",
 				"Backend developer",
 				"I build useful products."));
 
@@ -81,12 +88,16 @@ class RegisterProfileViewCommandHandlerTest {
 		var createHandler = new CreateProfileCommandHandler(
 				profileRepository,
 				new FakeBadgeRepository(),
+				new FakeMagicLinkRepository(),
+				new MagicLinkFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z")), java.time.Duration.ofDays(30)),
+				new FakeMagicLinkEmailSender(),
 				new ProfileFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))),
 				new BadgeFactory(new FixedDateTimeProvider(Instant.parse("2026-03-17T10:00:00Z"))));
 
 		createHandler.handle(new CreateProfileCommand(
 				"alex-martin",
 				"Alex Martin",
+				"alex@example.com",
 				"Backend developer",
 				"I build useful products."));
 

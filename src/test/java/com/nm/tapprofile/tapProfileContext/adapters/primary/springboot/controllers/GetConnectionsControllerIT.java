@@ -38,6 +38,7 @@ class GetConnectionsControllerIT {
 		var scannerRequest = new CreateProfileHttpRequest(
 				"scanner-connections-it",
 				"Scanner Connections IT",
+				"scanner-connections-it@example.com",
 				"VISITOR",
 				"Backend developer",
 				"I scan badges.");
@@ -55,6 +56,7 @@ class GetConnectionsControllerIT {
 		var scannedRequest = new CreateProfileHttpRequest(
 				"scanned-connections-it",
 				"Scanned Connections IT",
+				"scanned-connections-it@example.com",
 				"EXHIBITOR",
 				"Product engineer",
 				"I get scanned.");

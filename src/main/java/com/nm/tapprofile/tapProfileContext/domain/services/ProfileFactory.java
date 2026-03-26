@@ -19,11 +19,13 @@ public final class ProfileFactory {
 	public Validation<ValidationError, Profile> createDraft(
 			String slug,
 			String displayName,
+			String email,
 			String role,
 			String headline,
 			String bio) {
 		var slugValidation = Slug.create(slug);
 		var displayNameValidation = DisplayName.create(displayName);
+		var emailValidation = EmailAddress.create(email);
 		var roleValidation = ProfileRole.create(role);
 		var headlineValidation = Headline.create(headline);
 		var bioValidation = Bio.create(bio);
@@ -36,6 +38,10 @@ public final class ProfileFactory {
 
 		if (displayNameValidation.isInvalid()) {
 			errors.addAll(displayNameValidation.getErrors());
+		}
+
+		if (emailValidation.isInvalid()) {
+			errors.addAll(emailValidation.getErrors());
 		}
 
 		if (roleValidation.isInvalid()) {
@@ -58,6 +64,7 @@ public final class ProfileFactory {
 				ProfileId.newId(),
 				slugValidation.get(),
 				displayNameValidation.get(),
+				emailValidation.get(),
 				roleValidation.get(),
 				headlineValidation.get(),
 				bioValidation.get(),

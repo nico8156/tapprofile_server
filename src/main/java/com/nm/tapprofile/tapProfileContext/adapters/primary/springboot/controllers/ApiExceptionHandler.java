@@ -6,6 +6,8 @@ import com.nm.tapprofile.tapProfileContext.domain.errors.BadgeNotFoundError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.BadgeRevokedError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ConnectionAlreadySelfError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.DomainError;
+import com.nm.tapprofile.tapProfileContext.domain.errors.MagicLinkExpiredError;
+import com.nm.tapprofile.tapProfileContext.domain.errors.MagicLinkNotFoundError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileAlreadyPublishedError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotFoundError;
 import com.nm.tapprofile.tapProfileContext.domain.errors.ProfileNotPublishedError;
@@ -55,6 +57,8 @@ public final class ApiExceptionHandler {
 			case ProfileNotPublishedError ignored -> HttpStatus.NOT_FOUND;
 			case BadgeNotFoundError ignored -> HttpStatus.NOT_FOUND;
 			case BadgeRevokedError ignored -> HttpStatus.NOT_FOUND;
+			case MagicLinkNotFoundError ignored -> HttpStatus.NOT_FOUND;
+			case MagicLinkExpiredError ignored -> HttpStatus.GONE;
 			case SlugAlreadyTakenError ignored -> HttpStatus.CONFLICT;
 			case ProfileAlreadyPublishedError ignored -> HttpStatus.CONFLICT;
 			case ConnectionAlreadySelfError ignored -> HttpStatus.BAD_REQUEST;

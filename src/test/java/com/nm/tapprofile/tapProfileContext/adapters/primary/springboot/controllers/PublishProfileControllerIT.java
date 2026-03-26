@@ -32,6 +32,7 @@ class PublishProfileControllerIT {
 		var createRequest = new CreateProfileHttpRequest(
 				"alex-publish",
 				"Alex Publish",
+				"alex-publish@example.com",
 				"Backend developer",
 				"I build useful products.");
 

@@ -8,7 +8,9 @@ public sealed interface DomainError permits
 		ProfileNotPublishedError,
 		BadgeNotFoundError,
 		BadgeRevokedError,
-		ConnectionAlreadySelfError {
+		ConnectionAlreadySelfError,
+		MagicLinkNotFoundError,
+		MagicLinkExpiredError {
 	String code();
 
 	String message();

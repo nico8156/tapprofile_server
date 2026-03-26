@@ -27,6 +27,7 @@ public class CreateProfileController {
 		var result = handler.handle(new CreateProfileCommand(
 				request.slug(),
 				request.displayName(),
+				request.email(),
 				request.role() == null ? com.nm.tapprofile.tapProfileContext.domain.model.ProfileRole.VISITOR.name() : request.role(),
 				request.headline(),
 				request.bio()));

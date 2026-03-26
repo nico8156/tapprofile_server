@@ -35,6 +35,7 @@ class GetDashboardControllerIT {
 		var createRequest = new CreateProfileHttpRequest(
 				"alex-dashboard",
 				"Alex Dashboard",
+				"alex-dashboard@example.com",
 				"Backend developer",
 				"I build useful products.");
 

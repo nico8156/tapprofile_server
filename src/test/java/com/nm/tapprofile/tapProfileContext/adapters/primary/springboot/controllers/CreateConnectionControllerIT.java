@@ -42,6 +42,7 @@ class CreateConnectionControllerIT {
 		var scannerRequest = new CreateProfileHttpRequest(
 				"scanner-it",
 				"Scanner IT",
+				"scanner-it@example.com",
 				"Backend developer",
 				"I scan badges.");
 
@@ -58,6 +59,7 @@ class CreateConnectionControllerIT {
 		var scannedRequest = new CreateProfileHttpRequest(
 				"scanned-it",
 				"Scanned IT",
+				"scanned-it@example.com",
 				"Product engineer",
 				"I get scanned.");
 
@@ -90,6 +92,7 @@ class CreateConnectionControllerIT {
 		var firstRequest = new CreateProfileHttpRequest(
 				"first-connection-it",
 				"First Connection IT",
+				"first-connection-it@example.com",
 				"Backend developer",
 				"I scan badges.");
 
@@ -106,6 +109,7 @@ class CreateConnectionControllerIT {
 		var secondRequest = new CreateProfileHttpRequest(
 				"second-connection-it",
 				"Second Connection IT",
+				"second-connection-it@example.com",
 				"Product engineer",
 				"I also scan badges.");
 

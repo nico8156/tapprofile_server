@@ -34,6 +34,7 @@ class PublicProfileControllerIT {
 		var createRequest = new CreateProfileHttpRequest(
 				"alex-public",
 				"Alex Public",
+				"alex-public@example.com",
 				"Backend developer",
 				"I build useful products.");
 
@@ -62,6 +63,7 @@ class PublicProfileControllerIT {
 		var createRequest = new CreateProfileHttpRequest(
 				"alex-draft-public",
 				"Alex Draft",
+				"alex-draft-public@example.com",
 				"Backend developer",
 				"I build useful products.");
 

@@ -37,6 +37,7 @@ class PublicBadgeControllerIT {
 		var createRequest = new CreateProfileHttpRequest(
 				"alex-badge-it",
 				"Alex Badge IT",
+				"alex-badge-it@example.com",
 				"EXHIBITOR",
 				"Backend developer",
 				"I share my badge.");
